@@ -12,13 +12,18 @@
 
 # yarn
 .yarn/*
-!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-.yarn/install-state.gz
+yarn-debug.log*
+yarn-error.log*
+.yarn-integrity
+yarn.lock
+
+# npm
+package-lock.json
 
 # testing
 /coverage
@@ -86,3 +91,15 @@ ehthumbs.db
 *.swo
 *.tmp
 
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# Vite
+.vite
+
+# log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
