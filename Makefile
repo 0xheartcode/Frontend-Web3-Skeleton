@@ -1,5 +1,5 @@
-# Include .env file if it exists
--include .env
+# Include .env.local file if it exists
+-include .env.local
 
 # Define variables
 # .env imported variables
@@ -181,8 +181,8 @@ setupdevenv: ##A simple command that copies .env.dev the .env file.
 install: package.json ## Basic pnpm install.
 	@pnpm install
 
-.PHONY: start
-start: ## Basic pnpm start.
+.PHONY: dev
+dev: ## Basic pnpm start.
 	@pnpm dev
 
 .PHONY: pnpmbuild
@@ -225,3 +225,4 @@ systemstats: ##Show Diskspace, CPU and RAM.
 .PHONY: diskspace
 diskspace: ##Show detailed disk space information.
 	@df -h
+
