@@ -176,18 +176,18 @@ setupdevenv: ##A simple command that copies .env.dev the .env file.
 
 
 # ================
-##@ Yarn section
+##@ PNPM section
 .PHONY: install
-install: package.json ## Basic yarn install.
-	@yarn install
+install: package.json ## Basic pnpm install.
+	@pnpm install
 
 .PHONY: start
-start: ## Basic yarn start.
-	@yarn start
+start: ## Basic pnpm start.
+	@pnpm dev
 
-.PHONY: yarnbuild
-yarnbuild: ## Basic yarn start.
-	@yarn build
+.PHONY: pnpmbuild
+pnpmbuild: ## Basic pnpm start.
+	@pnpm build
 
 
 # ================
@@ -198,7 +198,7 @@ help:  ##Show this help message.
 
 .PHONY: version
 version: ##Show version of `Docker`, `Docker compose` and `Yarn`.
-	@echo -n "Yarn version: "; yarn -v
+	@echo -n "PNPM version: "; pnpm -v
 	@ docker -v
 	@ docker compose version
 

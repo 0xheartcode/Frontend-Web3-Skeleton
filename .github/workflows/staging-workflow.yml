@@ -13,14 +13,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Set environment variable
         run: echo "CI=false" >> $GITHUB_ENV
@@ -28,21 +34,21 @@ jobs:
       - name: Check version
         run: make version
 
-      - name: Set REACT_APP_ENV to branch name
+      - name: Set VITE_APP_ENV to branch name
         run: |
           # Extract branch name from GITHUB_REF
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           # Only update if branch is prod or staging
-          if [ "$BRANCH_NAME" = "prod" ] || [ "$BRANCH_NAME" = "staging" ]; then
-            sed -i "s/^REACT_APP_ENV=.*/REACT_APP_ENV=$BRANCH_NAME/" .env
-            echo "Updated REACT_APP_ENV to $BRANCH_NAME in .env file"
+          if [ "$BRANCH_NAME" = "prod" ] || [ "$BRANCH_NAME" = "staging" ] || [ "$BRANCH_NAME" = "testnet" ]; then
+            sed -i "s/^VITE_APP_ENV=.*/VITE_APP_ENV=$BRANCH_NAME/" .env
+            echo "Updated VITE_APP_ENV to $BRANCH_NAME in .env file"
           else
-            echo "Branch is not prod or staging. REACT_APP_ENV remains unchanged."
+            echo "Branch is not prod or staging. VITE_APP_ENV remains unchanged."
           fi
-          grep REACT_APP_ENV .env
+          grep VITE_APP_ENV .env
 
-      - name: Yarn build
-        run: yarn build
+      - name: PNPM build
+        run: pnpm build
 
       - name: Build the docker image
         run: make composebuild-prod

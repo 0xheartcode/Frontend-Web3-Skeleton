@@ -1,8 +1,8 @@
-# Blank Boilerplate CI/CD Yarn v4 Project
+# Blank Boilerplate CI/CD PNPM Project
 
 Welcome to the Blank Boilerplate Frontend project. 
 
-This project is a React application utilizing TailwindCSS for styling and Ethers.js for blockchain interactions. It is configured to use Yarn v4 as the package manager. It does use Github CI/CD.
+This project is a React application utilizing TailwindCSS for styling and Ethers.js for blockchain interactions. It is configured to use PNPM as the package manager. It does use Github CI/CD.
 
 ## Table of Contents
 
@@ -15,57 +15,68 @@ This project is a React application utilizing TailwindCSS for styling and Ethers
 To install the dependencies for this project, run:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn start`
+### `pnpm dev`
 
-Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the app in the development mode. Open [http://localhost:3000](http://localhost:5173) to view it in your browser.
 
-### `yarn build`
+### `pnpm build`
 
 Builds the app for production to the `build` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### `yarn test`
+### `pnpm lint`
 
-Launches the test runner in the interactive watch mode.
+Runs the linter to check for code style issues and potential errors.
 
-### `yarn eject`
+### `pnpm preview`
 
-This command will remove the single build dependency from your project. **Note: this is a one-way operation. Once you \`eject\`, you can’t go back!**
+Locally preview the production build. This command should be run after `pnpm build`.
 
-### `yarn serve`
+### `pnpm typecheck`
 
-Serves the production build of the app using a static server.
+Runs TypeScript type checking across your project.
+
 
 ## Project Structure
 
 ```
 .
-├── public
-│   ├── index.html
-│   └── ...
-├── src
-│   ├── Components
-│   ├── Pages
-│   ├── App.jsx
-│   ├── index.js
-│   └── ...
-├── .gitignore
-├── .yarn
-│   ├── releases
-│   └── install-state.gz
-├── .yarnrc.yml
-├── config-overrides.js
-├── craco.config.js
+├── eslint.config.js
+├── index.html
+├── Makefile
 ├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-└── yarn.lock
+├── pnpm-lock.yaml
+├── postcss.config.cjs
+├── public
+│   └── vite.svg
+├── README.md
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── tailwind.config.cjs
+├── tsconfig.app.json
+├── tsconfig.app.tsbuildinfo
+├── tsconfig.json
+├── tsconfig.node.json
+├── tsconfig.node.tsbuildinfo
+├── utils
+│   ├── dockerfiles
+│   │   ├── docker-compose.nginx.yml
+│   │   └── Dockerfile.nginxbuild
+│   └── nginx
+│       └── nginx.conf
+└── vite.config.ts
 ```
 
 ### CI/CD Process
