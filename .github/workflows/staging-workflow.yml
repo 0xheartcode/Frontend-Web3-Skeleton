@@ -28,6 +28,19 @@ jobs:
       - name: Check version
         run: make version
 
+      - name: Set REACT_APP_ENV to branch name
+        run: |
+          # Extract branch name from GITHUB_REF
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          # Only update if branch is prod or staging
+          if [ "$BRANCH_NAME" = "prod" ] || [ "$BRANCH_NAME" = "staging" ]; then
+            sed -i "s/^REACT_APP_ENV=.*/REACT_APP_ENV=$BRANCH_NAME/" .env
+            echo "Updated REACT_APP_ENV to $BRANCH_NAME in .env file"
+          else
+            echo "Branch is not prod or staging. REACT_APP_ENV remains unchanged."
+          fi
+          grep REACT_APP_ENV .env
+
       - name: Yarn build
         run: yarn build
 
@@ -46,7 +59,7 @@ jobs:
           echo "FOLDER_NAME=$FOLDER_NAME" >> $GITHUB_ENV
           export DOCKER_IMAGE_NAME=$(make echo_docker_image_name)
           echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" >> $GITHUB_ENV
-          export APPLICATION_PORT=3002 # TODO, need to unhardcode this, and set in the Github variables
+          export APPLICATION_PORT=${{vars.STAGING_APPLICATION_PORT}}
           echo "APPLICATION_PORT=$APPLICATION_PORT" >> $GITHUB_ENV
       - name: Check files
         run: ls -a

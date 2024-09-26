@@ -29,7 +29,7 @@
 
 # misc
 .DS_Store
-.env
+.env.local
 .custom.env
 # log files
 npm-debug.log*
