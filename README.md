@@ -2,7 +2,7 @@
 
 Welcome to the Blank Boilerplate Frontend project. 
 
-This project is a React application utilizing TailwindCSS for styling and Ethers.js for blockchain interactions. It is configured to use PNPM as the package manager. It does use Github CI/CD.
+This project is a React application utilizing TailwindCSS for styling and Ethers.js for blockchain interactions. It is configured to use ~~Yarn v4 and Craco~~ VITE as a build tool and PNPM as the package manager. It does use Github CI/CD.
 
 ## Table of Contents
 
@@ -85,6 +85,7 @@ This project uses GitHub Actions for Continuous Integration and Continuous Deplo
 
 - **Production Branch**: Code pushed to the `prod` branch will trigger the CI/CD pipeline, which will build and deploy the application to the production environment.
 - **Staging Branch**: Code pushed to the `staging` branch will trigger the CI/CD pipeline, which will build and deploy the application to the staging environment.
+- **Testnet Branch**: Code pushed to the `testnet` branch will trigger the CI/CD pipeline, which will build and deploy the application to the testnet environment.
 - **Development Branch**: The `dev` branch is used for development purposes and does not trigger any CI/CD pipeline.
 
 The CI/CD process is defined in the `.github/workflows` directory and includes steps such as checking out the repository, setting up Node.js, installing dependencies, building the project, creating a Docker image, and deploying it to the server.
