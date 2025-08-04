@@ -4,7 +4,11 @@ services:
     build:
       context: ../../
       dockerfile: ./utils/dockerfiles/Dockerfile.nginxbuild
+      labels:
+        - "com.docker.compose.project=${COMPOSE_PROJECT_NAME}"
+        - "com.example.description=custom container nginx"
     labels:
+      - "com.docker.compose.project=${COMPOSE_PROJECT_NAME}"
       - "com.example.description=custom container nginx"
     ports:
       -  ${PORT}:80

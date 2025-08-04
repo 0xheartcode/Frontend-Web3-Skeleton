@@ -52,6 +52,19 @@ jobs:
       - name: PNPM build
         run: pnpm build
 
+      - name: Set DOCKERFILE_IMAGE_NAME
+        run: |
+          # Get folder name (same as Makefile DOCKER_NAME_BASE)
+          FOLDER_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]')
+
+          # Get branch name (same as Makefile BRANCH_NAME)
+          BRANCH_NAME="_${GITHUB_REF#refs/heads/}"
+
+          # Build image name (same pattern as docker compose creates)
+          export DOCKERFILE_IMAGE_NAME="${FOLDER_NAME}${BRANCH_NAME}_image-light-nginx"
+          echo "DOCKERFILE_IMAGE_NAME=$DOCKERFILE_IMAGE_NAME" >> $GITHUB_ENV
+          echo "Using DOCKERFILE_IMAGE_NAME: $DOCKERFILE_IMAGE_NAME"
+
       - name: Build the docker image
         run: make composebuild-prod
 

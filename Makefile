@@ -21,7 +21,7 @@ endif
 # Append the branch name to the directory name
 DOCKER_NAME = $(DOCKER_NAME_BASE)$(BRANCH_NAME)
 # Append the branch name to the directory name
-DOCKERFILE_IMAGE_NAME = dummy-frontend-$(BRANCH_NAME)-nginx
+# DOCKERFILE_IMAGE_NAME = dummy-frontend-$(BRANCH_NAME)-nginx  # Now set via CI/CD environment
 DOCKER_IMAGE = $(DOCKER_NAME)_image
 DOCKER_CONTAINER = $(DOCKER_IMAGE)_container
 DOCKER_PATH = ./utils/dockerfiles/
@@ -83,7 +83,24 @@ unsafe_prune: ##Forced docker prune without safety prompt. Cleans up more space.
 ##@ Custom Docker Commands
 .PHONY: get_repository_name
 get_repository_name: ##Gets the repository name IF the print_image_id exists.
-	@docker images --format '{{.ID}} {{.Repository}}' | grep -w "$(IMAGE_ID)" | awk '{printf "%s", $$2}'
+	@docker images --format '{{.ID}} {{.Repository}}' | grep "$(IMAGE_ID)" | cut -d' ' -f2
+
+.PHONY: debug_repository_name
+debug_repository_name: ##Debug the repository name lookup
+	@echo "DEBUG: IMAGE_ID=[$(IMAGE_ID)]"
+	@echo "DEBUG: IMAGE_ID length: $$(echo '$(IMAGE_ID)' | wc -c)"
+	@echo "DEBUG: IMAGE_ID hex dump: $$(echo '$(IMAGE_ID)' | od -c)"
+	@echo "DEBUG: DOCKER_IMAGE=$(DOCKER_IMAGE)"
+	@echo "DEBUG: All docker images:"
+	@docker images --format '{{.ID}} {{.Repository}}'
+	@echo "DEBUG: Grep result for IMAGE_ID:"
+	@docker images --format '{{.ID}} {{.Repository}}' | grep "$(IMAGE_ID)" || echo "No match found"
+	@echo "DEBUG: Final repository name:"
+	@docker images --format '{{.ID}} {{.Repository}}' | grep "$(IMAGE_ID)" | cut -d' ' -f2
+
+.PHONY: debug_image_id_raw
+debug_image_id_raw: ##Debug the raw IMAGE_ID variable
+	@echo "RAW IMAGE_ID: $(IMAGE_ID)"
 
 .PHONY: composebuild-prod
 composebuild-prod: ##Docker compose build. frontend-mainnet-prod-light-nginx. No cache by default.
@@ -112,7 +129,15 @@ delete_matching_images: ## Delete all local images with the DOCKER_IMAGE name.
 .PHONY: save_image_as_tar
 save_image_as_tar: ## Save the Docker image as a zip file
 	@echo "Saving Docker image $(DOCKER_IMAGE) with ID $(IMAGE_ID) as a tar file..."
-	docker save -o $(DOCKER_IMAGE).tar $(shell make get_repository_name):latest
+	$(eval REPO_NAME := $(shell docker images --format '{{.ID}} {{.Repository}}' | grep "$(IMAGE_ID)" | cut -d' ' -f2))
+	@echo "DEBUG: Repository name found: '$(REPO_NAME)'"
+	@if [ -z "$(REPO_NAME)" ]; then \
+		echo "ERROR: Repository name is empty! IMAGE_ID=$(IMAGE_ID)"; \
+		echo "Available images:"; \
+		docker images --format '{{.ID}} {{.Repository}}'; \
+		exit 1; \
+	fi
+	docker save -o $(DOCKER_IMAGE).tar $(REPO_NAME):latest
 	gzip $(DOCKER_IMAGE).tar
 	@echo "Docker image saved as $(DOCKER_IMAGE).tar.gz"
 
@@ -182,7 +207,8 @@ install: package.json ## Basic pnpm install.
 	@pnpm install
 
 .PHONY: dev
-dev: ## Basic pnpm start.
+dev: ## Pnpm start with the dev file.
+	@echo "Running pnpm dev with the standard .env file"
 	@pnpm dev
 
 .PHONY: pnpmbuild
