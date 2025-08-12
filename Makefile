@@ -5,19 +5,14 @@
 # .env imported variables
 PORT := $(if $(PORT),$(PORT), 3001)
 DOCKER_INTERNAL_PORT := $(if $(DOCKER_INTERNAL_PORT),$(DOCKER_INTERNAL_PORT), 3001)
-# Get the current directory name and convert it to lowercase
+# Get the current directory name in lowercase
 DOCKER_NAME_BASE = $(shell basename $(CURDIR) | tr '[:upper:]' '[:lower:]')
-
-# Check if we are inside a Git repository
-GIT_REPO = $(shell git rev-parse --is-inside-work-tree 2>/dev/null)
-
-# Set BRANCH_NAME only if inside a Git repository, else set it to an empty string
-ifeq ($(GIT_REPO),true)
-  BRANCH_NAME = _$(shell git rev-parse --abbrev-ref HEAD)
-else
-  BRANCH_NAME = ""
+# Get the current git branch name (empty if no git)
+BRANCH_NAME := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
+# Add underscore prefix only if branch exists
+ifneq ($(BRANCH_NAME),)
+  BRANCH_NAME := _$(BRANCH_NAME)
 endif
-
 # Append the branch name to the directory name
 DOCKER_NAME = $(DOCKER_NAME_BASE)$(BRANCH_NAME)
 # Append the branch name to the directory name

@@ -116,7 +116,7 @@ jobs:
             gunzip -f ${{ env.DOCKER_IMAGE_NAME }}.tar.gz
             docker load -i ${{env.DOCKER_IMAGE_NAME}}.tar
             make print_image_id
-            docker run --name $(make get_repository_name) -d -p ${{ env.APPLICATION_PORT }}:80 $(make print_image_id_raw)
+            docker run --name $(make get_repository_name)-container -d -p ${{ env.APPLICATION_PORT }}:80 $(make get_repository_name):latest
             # 
             # Cleanup
             #
